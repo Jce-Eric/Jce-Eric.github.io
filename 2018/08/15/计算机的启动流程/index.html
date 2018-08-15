@@ -11,7 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any pr,"> 
+    <meta name="description" content="1.当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为0xF000:0xFFF0，即地址0xFFFF0，该地址为BIOS的入口地址。
+2.BIOS的最后一项工作就是检查0盘0道1扇区（第,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -55,12 +56,15 @@
         <div class="stuff">
             <span>八月 15, 2018</span>
             
-  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/当你按下电源的瞬间/">当你按下电源的瞬间</a></li></ul>
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Linux/">Linux</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/计算机原理/">计算机原理</a></li></ul>
 
 
         </div>
         <div class="content markdown">
-            
+            <pre><code>1.当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为0xF000:0xFFF0，即地址0xFFFF0，该地址为BIOS的入口地址。
+2.BIOS的最后一项工作就是检查0盘0道1扇区（第一个扇区，在CHS中扇区是从1开始编号）的内容，如果此扇区的末尾两个字节是魔数0x55和0xaa，则认为此扇区中存在MBR，然后MBR加载到物理地址为0x7c00的内存中去。
+3.随后跳转到0x7c00地址继续执行
+</code></pre>
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">
