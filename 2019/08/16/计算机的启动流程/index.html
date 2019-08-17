@@ -10,7 +10,7 @@
   
   <title>
     
-      计算机的启动流程 | Hexo
+      计算机的启动流程简述 | Hexo
     
   </title>
   <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -144,8 +144,8 @@
 </header>
 
     <div id="article-banner">
-  <h2>计算机的启动流程</h2>
-  <p class="post-date">2018-08-15</p>
+  <h2>计算机的启动流程简述</h2>
+  <p class="post-date">2019-08-16</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -153,21 +153,34 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>一、当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为0xF000:0xFFF0，即地址0xFFFF0，该地址为BIOS的入口地址。该处为指令 jmp far f000:e05b</p>
-<p>二、BIOS的最后一项工作就是检查0盘0道1扇区（第一个扇区，在CHS中扇区是从1开始编号）的内容，如果此扇区的末尾两个字节是魔数0x55和0xaa，则认为此扇区中存在MBR，然后将MBR加载到物理地址为0x7c00的内存中去。</p>
-<p>三、随后跳转到0x7c00地址继续执行。</p>
+    <section class="markdown-content"><h2 id="接通电源"><a href="#接通电源" class="headerlink" title="接通电源"></a>接通电源</h2><p>当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为 <font color="Coral">0xF000 : 0xFFF0</font> ，即地址<font color="Coral"> 0xFFFF0 </font>，该地址为BIOS的入口地址。</p>
+<blockquote>
+<p>由于开机的时候计算机处于实模式下，只能访问1MB地址空间，而地址<font color="Coral"> 0xFFFF0 </font>距离1MB只剩下16个字节了。故真正的BIOS代码不在地址<font color="Coral"> 0xFFFF0 </font>，该处只是一个跳转指令  <code>jmp far f000 : e05b</code>，真正的BIOS代码在地址 <font color="Coral"> 0xFE050 </font>。</p>
+</blockquote>
+<blockquote>
+<p><strong>实模式为什么地址空间只有1MB?</strong><br>&emsp;&emsp;实模式出现于 8088 CPU时代，当时只有20根地址线，故地址空间只有1MB。而现在的计算机虽然不只20跟地址线，但出于向后兼容的需要，所以实模式下仍只有1MB地址空间。</p>
+</blockquote>
+<h2 id="BIOS上场"><a href="#BIOS上场" class="headerlink" title="BIOS上场"></a>BIOS上场</h2><p>计算机执行地址<font color="Coral"> 0xFFFF0 </font>处的跳转指令，将控制权交给BIOS，BIOS检查内存，显卡等外设信息，进行初始化硬件等操作。BIOS的最后一项工作就是检查位于启动盘的0盘0道1扇区的内容，如果此扇区的末尾两个字节是魔数<font color="Coral"> 0x55 </font>和<font color="Coral"> 0xaa </font>，则认为此扇区中存在MBR，然后将MBR加载到物理地址为<font color="Coral"> 0x7c00 </font>的内存中去。跳转到<font color="Coral"> 0x7c00 </font>地址继续执行，将控制权交给MBR。</p>
+<blockquote>
+<p>0盘0道1扇区 是硬盘的第一个扇区，在CHS寻址方式中，扇区是从1开始编号的。</p>
+</blockquote>
+<h2 id="MBR接管计算机"><a href="#MBR接管计算机" class="headerlink" title="MBR接管计算机"></a>MBR接管计算机</h2><p>MBR 只有一个扇区（512个字节）大小（因为该扇区的末尾要添加魔数<font color="Coral"> 0x55 </font>和<font color="Coral"> 0xaa </font>用于标记），空间太小，所以只能作为一个跳板，负责将硬盘上的loader加载到内存，将接力棒交给它。（此处只讨论单操作系统的情况）</p>
+<h2 id="Loader为操作系统出场做铺垫"><a href="#Loader为操作系统出场做铺垫" class="headerlink" title="Loader为操作系统出场做铺垫"></a>Loader为操作系统出场做铺垫</h2><p>Loader将会构建GDT（全局描述符表），把CPU切换到保护模式，开启分页等准备操作，最后将操作系统内核加载到内存中。操作系统正式登场。</p>
+<blockquote>
+<p>实模式和保护模式都是CPU的工作模式，而CPU的工作模式是指CPU的寻址方式、寄存器大小等用来反应CPU在该环境下如何工作的概念。</p>
+</blockquote>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
-  </a>
-
   <a href="/tags#计算机原理" >
     <span class="tag-code">计算机原理</span>
+  </a>
+
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
   </a>
 
       </div>
@@ -178,13 +191,13 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-    
-      <a class="nav-right" href="/2019/08/16/kmp/">
+      <a class="nav-left" href="/2019/08/16/hello-world/">
+        <span class="nav-arrow">← </span>
         
-          kmp
+          Hello World
         
-        <span class="nav-arrow"> →</span>
       </a>
+    
     
   </div>
 
@@ -230,7 +243,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="nav">none</ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#接通电源"><span class="toc-nav-text">接通电源</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#BIOS上场"><span class="toc-nav-text">BIOS上场</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#MBR接管计算机"><span class="toc-nav-text">MBR接管计算机</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Loader为操作系统出场做铺垫"><span class="toc-nav-text">Loader为操作系统出场做铺垫</span></a></li></ol>
     
   </div>
 </aside>
@@ -240,7 +253,7 @@
 
 <script>
   (function () {
-    var url = 'http://yoursite.com/2018/08/15/计算机的启动流程/';
+    var url = 'http://yoursite.com/2019/08/16/计算机的启动流程/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -302,7 +315,7 @@
     var gitmentConfig = "Jce-Eric";
     if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
-        id: "计算机的启动流程",
+        id: "计算机的启动流程简述",
         owner: "Jce-Eric",
         repo: "Jce-Eric.github.io",
         oauth: {
@@ -357,7 +370,7 @@
 </script>
 
 <script>
-  var hasLine = 'true';
+  var hasLine = 'false';
   async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');

@@ -157,11 +157,28 @@
 <blockquote>
 <p>大端：高位字节存储在内存的低地址端，低位字节存储在内存的高地址端。<br>小端：低位字节存储在内存的低地址端，高位字节存储在内存的高地址端。</p>
 </blockquote>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="栗子1"><a href="#栗子1" class="headerlink" title="栗子1"></a>栗子1</h3><p>给定一个数字 0x12345678，共有4个字节，分别为 0x12, 0x34, 0x56, 0x78<br>·在大端机器上其在内存中存储为：<br>    内存 低地址 ———&gt; 高地址<br>         0x12 0x34 0x56 0x78<br>·而在小端机器上：<br>    内存 低地址 ———&gt; 高地址<br>         0x78 0x56 0x34 0x12</p>
-<h3 id="栗子2"><a href="#栗子2" class="headerlink" title="栗子2"></a>栗子2</h3><p>给CPU一个字节数组 [0x01,0x02,0x0a,0x09]，让CPU以32位int读取。<br>·当CPU是大端模式时，CPU读取到的int数为：0x01020a09，即十进制数 16910857<br>·当CPU是小端模式时，CPU读取到的int数为：0x090a0201，即十进制数 151650817</p>
-<h2 id="查看计算机的字节序"><a href="#查看计算机的字节序" class="headerlink" title="查看计算机的字节序"></a>查看计算机的字节序</h2><p>用代码查看当前的计算机的字节序<br>    借助C语言的联合，先存储int数据，再以字节数组的形式读取，即可判断当前机器的字节序<br>    代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">union</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n;</span><br><span class="line">        <span class="keyword">char</span> ch[<span class="number">4</span>];</span><br><span class="line">    &#125; data;</span><br><span class="line">    data.n = <span class="number">0x12345678</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"从低地址 -&gt; 高地址 每个字节依次是: "</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%x "</span>,data.ch[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(data.ch[<span class="number">0</span>] == <span class="number">0x78</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n当前机器为小端机器"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n当前机器为大端机器"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="栗子1"><a href="#栗子1" class="headerlink" title="栗子1"></a>栗子1</h3><p>给定一个数字 <font color="Coral">0x12345678</font>，共有4个字节，分别为 <font color="Coral">0x12</font>, <font color="Coral">0x34</font>, <font color="Coral">0x56</font>, <font color="Coral">0x78</font></p>
+<ul>
+<li>在大端机器上其在内存中存储为：<br>内存 低地址 ————-&gt; 高地址<br><br>&emsp;&emsp; <font color="Coral">0x12&emsp;0x34&emsp;0x56&emsp;0x78</font></li>
+<li>而在小端机器上：<br>内存 低地址 ————-&gt; 高地址<br><br>&emsp;&emsp; <font color="Coral">0x78&emsp;0x56&emsp;0x34&emsp;0x12</font></li>
+</ul>
+<h3 id="栗子2"><a href="#栗子2" class="headerlink" title="栗子2"></a>栗子2</h3><p>给CPU一个字节数组 [<font color="Coral">0x01</font>, <font color="Coral">0x02</font>, <font color="Coral">0x0a</font>, <font color="Coral">0x09</font>]，让CPU以32位int读取。</p>
+<ul>
+<li>当CPU是大端模式时，CPU读取到的int数为：<font color="Coral">0x01020a09</font>，即十进制数 <font color="Coral">16910857</font></li>
+<li>当CPU是小端模式时，CPU读取到的int数为：<font color="Coral">0x090a0201</font>，即十进制数 <font color="Coral">151650817</font></li>
+</ul>
+<h2 id="查看计算机的字节序"><a href="#查看计算机的字节序" class="headerlink" title="查看计算机的字节序"></a>查看计算机的字节序</h2><p>用代码查看当前的计算机的字节序<br>    借助C语言的联合，先存储int数据，再以字节数组的形式读取，即可判断当前机器的字节序<br><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">union</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n;</span><br><span class="line">        <span class="keyword">char</span> ch[<span class="number">4</span>];</span><br><span class="line">    &#125; data;</span><br><span class="line">    data.n = <span class="number">0x12345678</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"从低地址 -&gt; 高地址 每个字节依次是: "</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%x "</span>,data.ch[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(data.ch[<span class="number">0</span>] == <span class="number">0x78</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n当前机器为小端机器"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n当前机器为大端机器"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 </section>
     <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#计算机原理" >
+    <span class="tag-code">计算机原理</span>
+  </a>
+
+      </div>
     
     <!-- Tags END -->
     <!-- NAV START -->
@@ -355,7 +372,7 @@
 </script>
 
 <script>
-  var hasLine = 'true';
+  var hasLine = 'false';
   async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
