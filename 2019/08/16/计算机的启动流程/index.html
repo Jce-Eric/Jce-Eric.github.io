@@ -1,132 +1,159 @@
 <!DOCTYPE html>
-<html lang="">
+<html>
   <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Jce-Eric&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
     
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+      计算机的启动流程简述 | Hexo
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/css/plugins/gitment.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+    <script src="/js/gitment.js"></script>
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-  <meta name="description" content="计算机的启动流程简述"/>
-
-
-
-
-  <meta name="keywords" content="计算机原理,Linux," />
-
-
-
-
-
-  <link rel="alternate" href="/default" title="Hexo">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/me.JPG?v=1.1" />
-
-
-
-<link rel="canonical" href="http://yoursite.com/2019/08/16/计算机的启动流程/"/>
-
-
-<meta name="description" content="接通电源当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为 0xF000 : 0xFFF0 ，即地址 0xFFFF0 ，该地址为BIOS的入口地址。  由于开机的时候计算机处于实模式下，只能访问1MB地址空间，而地址 0xFFFF0 距离1MB只剩下16个字节了。故真正的BIOS代码不在地址 0xFFFF0 ，该处只是一个跳转指令  jmp far f000 : e05b，真正的BIO">
-<meta name="keywords" content="计算机原理,Linux">
-<meta property="og:type" content="article">
-<meta property="og:title" content="计算机的启动流程简述">
-<meta property="og:url" content="http://yoursite.com/2019/08/16/计算机的启动流程/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="接通电源当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为 0xF000 : 0xFFF0 ，即地址 0xFFFF0 ，该地址为BIOS的入口地址。  由于开机的时候计算机处于实模式下，只能访问1MB地址空间，而地址 0xFFFF0 距离1MB只剩下16个字节了。故真正的BIOS代码不在地址 0xFFFF0 ，该处只是一个跳转指令  jmp far f000 : e05b，真正的BIO">
-<meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-17T03:24:06.273Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="计算机的启动流程简述">
-<meta name="twitter:description" content="接通电源当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为 0xF000 : 0xFFF0 ，即地址 0xFFFF0 ，该地址为BIOS的入口地址。  由于开机的时候计算机处于实模式下，只能访问1MB地址空间，而地址 0xFFFF0 距离1MB只剩下16个字节了。故真正的BIOS代码不在地址 0xFFFF0 ，该处只是一个跳转指令  jmp far f000 : e05b，真正的BIO">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
   
 
 
-
-
-
-  
-
-
-    <title> 计算机的启动流程简述 - Hexo </title>
-  </head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">Hexo</a>
-    </h1>
-
-    <nav id="nav-top">
-        
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
-        
-  </nav>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
 </div>
 
-      </header>
-      <div id="content">
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Hexo</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
         
-    <div id="primary">
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
         
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
         
-          计算机的启动流程简述
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
         
-      </h1>
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
 
-      <time class="post-time">
-          Aug 16 2019
-      </time>
-    </header>
-
-
-
-    
-            <div class="post-content">
-            <h2 id="接通电源"><a href="#接通电源" class="headerlink" title="接通电源"></a>接通电源</h2><p>当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为 <font color="Coral">0xF000 : 0xFFF0</font> ，即地址<font color="Coral"> 0xFFFF0 </font>，该地址为BIOS的入口地址。</p>
+    <div id="article-banner">
+  <h2>计算机的启动流程简述</h2>
+  <p class="post-date">2019-08-16</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="接通电源"><a href="#接通电源" class="headerlink" title="接通电源"></a>接通电源</h2><p>当你按下计算机电源的瞬间，CPU的cs:ip寄存器就被初始化为 <font color="Coral">0xF000 : 0xFFF0</font> ，即地址<font color="Coral"> 0xFFFF0 </font>，该地址为BIOS的入口地址。</p>
 <blockquote>
 <p>由于开机的时候计算机处于实模式下，只能访问1MB地址空间，而地址<font color="Coral"> 0xFFFF0 </font>距离1MB只剩下16个字节了。故真正的BIOS代码不在地址<font color="Coral"> 0xFFFF0 </font>，该处只是一个跳转指令  <code>jmp far f000 : e05b</code>，真正的BIOS代码在地址 <font color="Coral"> 0xFE050 </font>。</p>
 </blockquote>
@@ -142,88 +169,217 @@
 <blockquote>
 <p>实模式和保护模式都是CPU的工作模式，而CPU的工作模式是指CPU的寻址方式、寄存器大小等用来反应CPU在该环境下如何工作的概念。</p>
 </blockquote>
-
-            </div>
-          
-
+</section>
+    <!-- Tags START -->
     
-      <footer class="post-footer">
-        <div class="post-tags">
-          
-            <a href="/tags/计算机原理/">计算机原理</a>
-          
-            <a href="/tags/Linux/">Linux</a>
-          
-        </div>
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#计算机原理" >
+    <span class="tag-code">计算机原理</span>
+  </a>
 
-        
-        
-  <nav class="post-nav">
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
+  </a>
+
+      </div>
     
-      <a class="prev" href="/2019/08/19/kmp/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">kmp</span>
-        <span class="prev-text nav-mobile">Prev</span>
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/08/16/hello-world/">
+        <span class="nav-arrow">← </span>
+        
+          Hello World
+        
       </a>
     
     
-      <a class="next" href="/2019/08/16/hello-world/">
-        <span class="next-text nav-default">Hello World</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
+      <a class="nav-right" href="/2019/08/19/kmp/">
         
-  <div class="comments" id="comments">
+          kmp
+        
+        <span class="nav-arrow"> →</span>
+      </a>
     
   </div>
 
-
-      </footer>
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
-
-    </div>
-
-      </div>
-
-      <footer id="colophon"><span class="copyright-year">
-    
-        &copy;
-    
-        2018 -
-    
-    2019
-    <span class="footer-author">John Doe.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/henryhuang/hexo-theme-polarbearsimple">Polar Bear Simple</a>
-    </span>
-</span>
-
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
+  <!-- Article END -->
+  <!-- Catalog START -->
   
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#接通电源"><span class="toc-nav-text">接通电源</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#BIOS上场"><span class="toc-nav-text">BIOS上场</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#MBR接管计算机"><span class="toc-nav-text">MBR接管计算机</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Loader为操作系统出场做铺垫"><span class="toc-nav-text">Loader为操作系统出场做铺垫</span></a></li></ol>
+    
+  </div>
+</aside>
   
+  <!-- Catalog END -->
+</main>
 
-  
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2019/08/16/计算机的启动流程/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
 
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
 
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "Jce-Eric";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "计算机的启动流程简述",
+        owner: "Jce-Eric",
+        repo: "Jce-Eric.github.io",
+        oauth: {
+          client_id: "52af927fe48e6c1d9f7e",
+          client_secret: "a7dc0d1a1a99003ca896eb1eeb7660967499d91e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
   </body>
 </html>
