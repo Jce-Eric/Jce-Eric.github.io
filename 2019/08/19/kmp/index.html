@@ -153,7 +153,15 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"></section>
+    <section class="markdown-content"><blockquote>
+<p>kmp算法是一种字符串匹配算法，22333你好22</p>
+</blockquote>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Q: 给定一个字符串 s = “abdabce” 和字符串 p = “abc”, 求 p 在 s 中的位置。<br>暴力匹配算法：<br>设当前s正在进行匹配的位置为i，p正在进行匹配的位置为j</p>
+<ol>
+<li>如果s[i] == p[j]，则 i++，j++, 继续匹配下一个字符。</li>
+<li>如果s[i] != p[j], 则 i = i - j + 1，j = 0，即不匹配时，j重置为0，从头开始匹配。<br><img src="/.com//hh.jpg" alt="暴力匹配算法GIF"></li>
+</ol>
+<h2 id="next数组"><a href="#next数组" class="headerlink" title="next数组"></a>next数组</h2><h2 id="步骤详解"><a href="#步骤详解" class="headerlink" title="步骤详解"></a>步骤详解</h2></section>
     <!-- Tags START -->
     
     <!-- Tags END -->
@@ -214,7 +222,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="nav">none</ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引入"><span class="toc-nav-text">引入</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#next数组"><span class="toc-nav-text">next数组</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#步骤详解"><span class="toc-nav-text">步骤详解</span></a></li></ol>
     
   </div>
 </aside>
