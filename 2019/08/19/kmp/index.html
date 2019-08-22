@@ -154,16 +154,103 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><blockquote>
-<p>kmp算法是一种字符串匹配算法，22</p>
+<p>kmp算法是一种字符串匹配算法。</p>
 </blockquote>
-<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Q: 给定一个字符串 s = “abdabce” 和字符串 p = “abc”, 求 p 在 s 中的位置。<br>暴力匹配算法：<br>设当前s正在进行匹配的位置为i，p正在进行匹配的位置为j</p>
+<p><strong><font color="Coral" size="5">Q:</font></strong> 给定一个字符串 s = “ababcabababc” 和字符串 p = “abababc”, 求 p 在 s 中的位置。</p>
+<h2 id="暴力匹配算法"><a href="#暴力匹配算法" class="headerlink" title="暴力匹配算法"></a>暴力匹配算法</h2><p>设当前s正在进行匹配的位置为i，p正在进行匹配的位置为j，暴力匹配算法的思路如下：</p>
 <ol>
 <li>如果s[i] == p[j]，则 i++，j++, 继续匹配下一个字符。</li>
-<li>如果s[i] != p[j], 则 i = i - j + 1，j = 0，即不匹配时，j重置为0，从头开始匹配。</li>
+<li>如果s[i] != p[j], 则 i = i - j + 1，j = 0，即不匹配时，j重置为0，从头开始匹配。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">find</span><span class="params">(String s, String p)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &lt; s.length() &amp;&amp; j &lt; p.length())&#123;</span><br><span class="line">        <span class="keyword">if</span>(s.charAt(i) == p.charAt(j))&#123;</span><br><span class="line">            j++;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            j = <span class="number">0</span>;</span><br><span class="line">            i = i - j + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(j == p.length())&#123;</span><br><span class="line">        <span class="keyword">return</span> i - j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<p><img src="/2019/08/19/kmp/test.gif" alt="暴力匹配算法GIF"></p>
-<p><img src="/2019/08/19/kmp/abc.jpeg" alt="暴力匹配算法GIF"></p>
-<h2 id="next数组"><a href="#next数组" class="headerlink" title="next数组"></a>next数组</h2><h2 id="步骤详解"><a href="#步骤详解" class="headerlink" title="步骤详解"></a>步骤详解</h2></section>
+<p>暴力匹配算法流程如图：<br><img src="/2019/08/19/kmp/1.gif" alt="暴力匹配算法GIF"><br>每次匹配失败时，j都要重置为0，再从头逐位比较，这样的效率很低。</p>
+<h2 id="KMP"><a href="#KMP" class="headerlink" title="KMP"></a>KMP</h2><p>在学习KMP算法之前，我们先了解几个定义：</p>
+<blockquote>
+<p><strong>字符串的前缀：</strong>字符串s的前缀为s[0,i], 0 &lt;= i &lt; s.length - 1，即除了最后一个字符以外，字符串的全部头部组合。</p>
+<p><strong>字符串的后缀：</strong>字符串s的后缀为s[i, s.length - 1], 1 &lt;= i &lt;= s.length - 1，指除了第一个字符以外，字符串的全部尾部组合。</p>
+<p><strong>部分匹配值：</strong>字符串的前缀和后缀中最长的共有元素的长度。</p>
+<p>例如，字符串”abab”的，前缀有{“a”，”ab”，”aba”}，后缀有{“b”，”ab”，”bab”},部分匹配值为2，即”ab”的长度</p>
+</blockquote>
+<h3 id="KMP步骤简述"><a href="#KMP步骤简述" class="headerlink" title="KMP步骤简述"></a>KMP步骤简述</h3><p>继续开头的例子，当i = 4，j = 4 时，已匹配字符串是”abab”，s[i] 和 p[j] 匹配失败。</p>
+<blockquote>
+<p>匹配字符串是”abab”可以分解为两个信息：1. p是以”abab”开头的。2. s中含有”abab”。</p>
+</blockquote>
+<p>已知此时p的”abab”和s的这个”abab”对齐进行匹配是失败的（即 i = 4， j = 4），移动p继续匹配，这时我们可以使得p的”abab”的前缀和s的”abab”的后缀尽可能长的匹配成功，即找到“abab”的前缀和后缀中最长的共有元素，即利用部分匹配值，减少无效的匹配步骤。</p>
+<p>我们可以发现”abab”的部分匹配值为2，即”ab”的长度,这时候我们可以右移p，使得新p的前缀”ab”和旧p的后缀”ab”对齐，也就是和s中”abab”的后缀”ab”对其，即令 j = 部分匹配值 = 2。</p>
+<blockquote>
+</blockquote>
+<p><img src="/2019/08/19/kmp/4.jpg" alt=""><br>此时”ab”是已匹配成功的，我们无需从第一位重新开始匹配，只要继续对比s[4]和p[2]即可，跳过无谓的匹配步骤。这就是KMP的算法思路。</p>
+<h3 id="next数组的定义"><a href="#next数组的定义" class="headerlink" title="next数组的定义"></a>next数组的定义</h3><p>为了不用重复计算和方便获取部分匹配值，我们为字符串p定义一个next数组，数组的长度等于p的长度。</p>
+<blockquote>
+<p><strong>1.</strong> next[j] : p[0, j - 1]的部分匹配值。当匹配到p[j]时，p[0, j - 1]是已匹配成功的，这时候我们就需要用到p[0, j - 1]的部分匹配值。<br><strong>2.</strong> 由next数组的定义可知，next[0] 一定为 0。若使next[0] = 0，当j = 0，p[j]和s不匹配时，我们会令 j = next[j]，即 j = 0，这样会造成死循环，为了标记p[0]就不匹配的情况，我们令<strong>next[0] = -1</strong>。<br><strong>3.</strong> 从另一个角度来讲，next[j] 的意义为：当p[j]和s[i]不匹配时，j应该跳转的位置。</p>
+</blockquote>
+<p>字符串”abababc”的next数组为：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">a</th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">a</th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">a</th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">-1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实现next数组"><a href="#实现next数组" class="headerlink" title="实现next数组"></a>实现next数组</h3><p>现在我们为字符串p计算next数组，假设我们已知：next[j] = k，求next[j + 1]。<br>由于next[j] = k可知，p[0, k - 1] == p[j - k, j-1]，即图中的绿色块g1 == g2。<br><img src="/2019/08/19/kmp/5.jpg" alt=""></p>
+<ol>
+<li>若k == -1 || p[k] == p[j]，则 p[0, k] == p[j - k, j]，即 next[j + 1] = next[j] + 1 = k + 1。</li>
+<li>若k != -1 &amp;&amp; p[k] != p[j]，则我们要在绿色块g1中，找到一个尽可能长的子字符串，它同样以 p[0] 开头，p[j - 1]结尾。即找到图中的 b1 和 b4，而 g1 == g2，所以b4 == b2。所以我们就是在要 g1 中找到最长的 b1 和 b2，由此可知 b1 和 b2 是 g1 的最长的前缀后缀公共元素，故 b1 的长度为next[k]。此时令 k = next[k], 再循环1，2步骤去匹配p[k] 和 p[j]。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] getNext(String p)&#123;</span><br><span class="line">    <span class="keyword">int</span> len = p.length();</span><br><span class="line">    <span class="keyword">int</span> k = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span>[] next = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">    next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(j &lt; len - <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(k == -<span class="number">1</span> || p.charAt(j) == p.charAt(k))&#123;</span><br><span class="line">            next[++j] = ++k;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            k = next[k];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="KMP的定义"><a href="#KMP的定义" class="headerlink" title="KMP的定义"></a>KMP的定义</h3><p>设当前s正在进行匹配的位置为i，p正在进行匹配的位置为j，KMP算法的思路如下：</p>
+<ol>
+<li>如果j == -1 或者 s[i] == p[j]时，i++，j++。（p[0]和s不匹配时，才会使得j == -1）</li>
+<li>如果j == -1 且 s[i] != p[j]，j = next[j]。即不匹配时，令 j = p[0, j-1]的部分匹配值。</li>
+</ol>
+<p>例子 s = “ababcabababc” ，p = “abababc” 的匹配流程如图：<br><img src="/2019/08/19/kmp/2.gif" alt="KMP算法GIF"></p>
+<p>实现代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">int</span> <span class="title">kmp</span><span class="params">(String s, String p)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] next = getNext(p);</span><br><span class="line">    <span class="keyword">int</span> sLen = s.length();</span><br><span class="line">    <span class="keyword">int</span> pLen = p.length();</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &lt; sLen &amp;&amp; j &lt; pLen)&#123;</span><br><span class="line">        System.out.println(<span class="string">"i:"</span>+i+<span class="string">" j:"</span>+j);</span><br><span class="line">        <span class="keyword">if</span>(j == -<span class="number">1</span> || s.charAt(i) == p.charAt(j))&#123;</span><br><span class="line">            i++;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            j = next[j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(j == pLen)&#123;</span><br><span class="line">        <span class="keyword">return</span> i - j;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="优化next数组"><a href="#优化next数组" class="headerlink" title="优化next数组"></a>优化next数组</h2><p>ababc   next[4]<br>当开头的例子使用KMP进行匹配时，我们发现，当 i = 4， j = 4时，匹配失败后下一步会拿p[2]进行匹配，但是我们已知前面的字符串是”abab”，已知 p[4] == p[2]，前面已经使用p[4]匹配失败，再拿 p[2]进行匹配必然是失败的，这个也是无效的匹配，可以直接跳过。这个在构造next数组时就可以预知了，所以我们应该再优化一下next数组，<strong>已知 k = next[j]，我们要使得当p[j] == p[k]时，next[j] = next[k]</strong>，这样就能跳过无效的匹配，加快效率。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] getNext(String p)&#123;</span><br><span class="line">    <span class="keyword">int</span> pLen = p.length();</span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> k = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span>[] next = <span class="keyword">new</span> <span class="keyword">int</span>[pLen];</span><br><span class="line">    next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(j &lt; pLen - <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(k == -<span class="number">1</span> || p.charAt(j) == p.charAt(k))&#123;</span><br><span class="line">            ++j;</span><br><span class="line">            ++k;</span><br><span class="line">            <span class="keyword">if</span>(p.charAt(j) == p.charAt(k))&#123;</span><br><span class="line">                next[j] = next[k];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                next[j] = k;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            k = next[k];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>字符串”abababc”的优化版next数组为：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">a</th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">a</th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">a</th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">-1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">4</td>
+</tr>
+</tbody>
+</table>
+<p>篇头的例子使用优化后的next数组进行匹配的流程如图：<br><img src="/2019/08/19/kmp/3.gif" alt=""></p>
+</section>
     <!-- Tags START -->
     
     <!-- Tags END -->
@@ -214,7 +301,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引入"><span class="toc-nav-text">引入</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#next数组"><span class="toc-nav-text">next数组</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#步骤详解"><span class="toc-nav-text">步骤详解</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#暴力匹配算法"><span class="toc-nav-text">暴力匹配算法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#KMP"><span class="toc-nav-text">KMP</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#KMP步骤简述"><span class="toc-nav-text">KMP步骤简述</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#next数组的定义"><span class="toc-nav-text">next数组的定义</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#实现next数组"><span class="toc-nav-text">实现next数组</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#KMP的定义"><span class="toc-nav-text">KMP的定义</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#优化next数组"><span class="toc-nav-text">优化next数组</span></a></li></ol>
     
   </div>
 </aside>
