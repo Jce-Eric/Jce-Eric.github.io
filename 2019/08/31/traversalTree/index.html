@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Jce-Eric&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      二叉树的遍历 | Hexo
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/css/plugins/gitment.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+    <script src="/js/gitment.js"></script>
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Hexo</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>二叉树的遍历</h2>
+  <p class="post-date">2019-08-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p>二叉树的遍历方式总的来说分为两种，深度优先搜索（DFS）和广度优先搜索（BFS）。其中深度优先搜索又细分为3种，分别是前序、中序、后序遍历。广度优先搜索在二叉树中又称为层次遍历。</p>
+</blockquote>
+<p><font color="Coral" size="5">例子</font>：给定一棵树，如图，我们以4种不同方式进行遍历。<br><img src="/2019/08/31/traversalTree/tree.png" alt=""></p>
+<h2 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h2><blockquote>
+<p>前序遍历的基本遍历流程是：根节点 –&gt; 左子树 –&gt; 右子树<br>对于每个子树，都递归地使用上面的流程进行遍历。</p>
+</blockquote>
+<p>我们对开篇的例子进行前序遍历：</p>
+<ol>
+<li>访问根节点 A，打印 “A”。</li>
+<li>访问根节点 A 的左子树，节点 B 作为该左子树的根节点，打印 “B”。</li>
+<li>把 B 看作根节点，访问根节点的左子树。类似的，打印 “D”。此时D已经没有子节点了，返回上级。</li>
+<li>把 B 看作根节点，已经访问完该根节点的左子树了，现在访问右子树，类似的，打印 “E”，同样返回上级。</li>
+<li>节点 B 作为根节点，已经访问完左右子树，返回上级。</li>
+<li>此时 根节点为 A，已经访问完 A 的左子树了，现在访问右子树。</li>
+<li>先打印 A 的右子树的根节点 C。</li>
+<li>把 C 作为根节点，访问其左子树，类似的，打印 “F”。</li>
+</ol>
+<p>递归的展开图如下：<br><img src="/2019/08/31/traversalTree/preOrderFlow.png" alt="前序遍历递归展开图"></p>
+<center><font color="#999" size="2">前序遍历递归展开图</font></center>
+
+<p>所以前序遍历结果为：A-B-D-E-C-F</p>
+<p>前序遍历的定义是递归的，所以使用递归来实现前序遍历是非常容易理解的。<br>首先我们定义一个节点类 Node：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> E val;              <span class="comment">/*当前节点存放的值*/</span></span><br><span class="line">    <span class="keyword">private</span> Node&lt;E&gt; right;      <span class="comment">/*右子树*/</span></span><br><span class="line">    <span class="keyword">private</span> Node&lt;E&gt; left;       <span class="comment">/*左子树*/</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(E val)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVal</span><span class="params">(E val)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">getVal</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.val;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRight</span><span class="params">(Node&lt;E&gt; right)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.right = right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node&lt;E&gt; <span class="title">getRight</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLeft</span><span class="params">(Node&lt;E&gt; left)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.left = left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node&lt;E&gt; <span class="title">getLeft</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="递归实现"><a href="#递归实现" class="headerlink" title="递归实现"></a>递归实现</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*先访问根节点*/</span></span><br><span class="line">    doSomeThing(root);</span><br><span class="line">    <span class="comment">/*递归地处理左子树*/</span></span><br><span class="line">    preOrderTraversal(root.getLeft());</span><br><span class="line">    <span class="comment">/*递归地处理右子树*/</span></span><br><span class="line">    preOrderTraversal(root.getRight());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*自定义操作，处理当前节点*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomeThing</span><span class="params">(Node&lt;E&gt; node)</span></span>&#123;</span><br><span class="line">    System.out.print(node.getVal()+<span class="string">","</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="非递归实现"><a href="#非递归实现" class="headerlink" title="非递归实现"></a>非递归实现</h3><p>前序遍历的非递归实现使用到了栈，利用栈先进后出的特点，每次 pop出一个节点 node，我们都可以把它看成一个根节点，使用doSomeThing()方法进行处理，然后把 node 的右子树、左子树先后 push 。使得在之后的循环中，都能优先处理左子树的根节点，再处理左子树的左子树。。。，而最开始 push 的右子树，只有等到处理完左子树的全部节点后才能开始处理。<br>过程如图：<br><img src="/2019/08/31/traversalTree/preOrderGIF.gif" alt=""><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrderTraversal2</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line">    Stack&lt;Node&lt;E&gt;&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    stack.push(root);</span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty()) &#123;</span><br><span class="line">        Node&lt;E&gt; node = stack.pop();</span><br><span class="line">        <span class="comment">/*先访问根节点*/</span></span><br><span class="line">        doSomeThing(node);</span><br><span class="line">        <span class="comment">/*先把右子树入栈，再把左子树入栈，使得下次循环时，先处理左子树*/</span></span><br><span class="line">        <span class="keyword">if</span>(node.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getRight());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(node.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getLeft());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><blockquote>
+<p>中序遍历的基本遍历流程是：左子树 –&gt; 根节点 –&gt; 右子树</p>
+</blockquote>
+<p><img src="/2019/08/31/traversalTree/inOrderFlow.png" alt="中序遍历递归展开图"></p>
+<center><font color="#999" size="2">中序遍历递归展开图</font></center>
+
+<p>开篇的例子的中序遍历结果为：D-B-E-A-F-C</p>
+<h3 id="递归实现-1"><a href="#递归实现-1" class="headerlink" title="递归实现"></a>递归实现</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inOrderTraversal</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*递归地处理左子树*/</span></span><br><span class="line">    inOrderTraversal(root.getLeft());</span><br><span class="line">    <span class="comment">/*访问根节点*/</span></span><br><span class="line">    doSomeThing(root);</span><br><span class="line">    <span class="comment">/*递归地处理右子树*/</span></span><br><span class="line">    inOrderTraversal(root.getRight());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="非递归实现-1"><a href="#非递归实现-1" class="headerlink" title="非递归实现"></a>非递归实现</h3><p>根据中序的定义，我们每次都要优先处理左子节点，再处理根节点，最后才处理右子节点。<br>我们在实现中用到了栈。初始时，我们需要 push 根节点，每次 push 一个新元素后，我们就要检查新元素的左子节点，将左子节点 push ，保证优先处理左子节点。而当不存在左子节点（到达叶子节点）或左子树已经处理完毕时，我们就要进行 pop 操作。每次 pop 后，说明当前 pop 的元素的左子树已经处理完毕，我们要处理当前 pop 的元素，以及处理其右子节点。</p>
+<blockquote>
+<p>可以发现一个对应关系：</p>
+<ul>
+<li>push ——&gt; 下一步要处理新元素的左子节点。</li>
+<li>pop  ——&gt; 下一步要处理 pop 出的元素的右子节点。<br>&nbsp;</li>
+</ul>
+</blockquote>
+<p>故我们定义一个 <code>Node&lt;E&gt; targetNode</code> 指向下一步要处理的节点。当 push 后，把他指向新元素的左子节点，当 pop 后，把他指向 pop出的元素的右子节点。<br>过程如图：<br><img src="/2019/08/31/traversalTree/inOrderGIF.gif" alt=""><br>具体代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inOrderTraversal3</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    Stack&lt;Node&lt;E&gt;&gt; stack = <span class="keyword">new</span> Stack&lt;Node&lt;E&gt;&gt;();</span><br><span class="line">    Node&lt;E&gt; targetNode = root;                  <span class="comment">/*指向下一步要处理的节点*/</span></span><br><span class="line">    <span class="keyword">while</span>(!stack.isEmpty() || targetNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(targetNode != <span class="keyword">null</span>)&#123;                 <span class="comment">/*目标节点不为null时，进行 push 操作*/</span></span><br><span class="line">            stack.push(targetNode);</span><br><span class="line">            targetNode = targetNode.getLeft();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;                                  <span class="comment">/*目标节点不存在时，进行 pop 操作*/</span></span><br><span class="line">            targetNode = stack.pop();</span><br><span class="line">            doSomeThing(targetNode);</span><br><span class="line">            targetNode = targetNode.getRight();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><blockquote>
+<p>后序遍历的基本遍历流程是：左子树 –&gt; 右子树 –&gt; 根节点</p>
+</blockquote>
+<p><img src="/2019/08/31/traversalTree/postOrderFlow.png" alt="后序遍历递归展开图"></p>
+<center><font color="#999" size="2">后序遍历递归展开图</font></center>
+
+
+<p>开篇的例子的后序遍历结果为：D-E-B-F-C-A</p>
+<h3 id="递归实现-2"><a href="#递归实现-2" class="headerlink" title="递归实现"></a>递归实现</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">posOrderTraversal</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*递归地处理左子树*/</span></span><br><span class="line">    inOrderTraversal(root.getLeft());</span><br><span class="line">    <span class="comment">/*递归地处理右子树*/</span></span><br><span class="line">    inOrderTraversal(root.getRight());</span><br><span class="line">    <span class="comment">/*访问根节点*/</span></span><br><span class="line">    doSomeThing(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="非递归实现-2"><a href="#非递归实现-2" class="headerlink" title="非递归实现"></a>非递归实现</h3><p>与前序遍历类似，每次 pop 出一个节点，我们都可以把他看成根节点，我们每次都会先访问到根节点，然后才会访问到他的左右子树，但是根节点要最后才处理，简单来说，先访问到的，要后处理，这符合栈的FILO，所以我们把每次访问到的节点，push 到一个新的栈中，最后把这个栈的元素全部 pop 出来即可。<br>过程如图：<br><img src="/2019/08/31/traversalTree/postOrderGIF.gif" alt=""><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*遍历的时候，每一个节点都是根节点，而根节点放在最后面处理，故放在结果栈中*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">posOrderTraversal</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line">    Stack&lt;Node&lt;E&gt;&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    Stack&lt;Node&lt;E&gt;&gt; resultStack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    stack.push(root);</span><br><span class="line">    Node&lt;E&gt; preNode = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty()) &#123;</span><br><span class="line">        Node&lt;E&gt; node = stack.pop();</span><br><span class="line">        resultStack.push(node);</span><br><span class="line">        <span class="keyword">if</span>(node.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getLeft());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(node.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getRight());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(!resultStack.isEmpty())&#123;</span><br><span class="line">        Node&lt;E&gt; node = resultStack.pop();</span><br><span class="line">        doSomeThing(node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="层次遍历"><a href="#层次遍历" class="headerlink" title="层次遍历"></a>层次遍历</h2><p>层次遍历就是逐层进行遍历，我们可以使用队列，先把根节点进队，再在循环中，从队头 poll 一个节点，处理当前节点的左右子节点分别加到队尾，这样就能在对头逐层进行遍历。<br>开篇的例子的后序遍历结果为：A-B-C-D-E-F<br>过程如图：<br><img src="/2019/08/31/traversalTree/levelGIF.gif" alt=""><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">levelTraversal</span><span class="params">(Node&lt;E&gt; root)</span></span>&#123;</span><br><span class="line">    Queue&lt;Node&lt;E&gt;&gt; queue = <span class="keyword">new</span> LinkedList&lt;Node&lt;E&gt;&gt;();</span><br><span class="line">    queue.offer(root);</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        Node&lt;E&gt; node = queue.poll();</span><br><span class="line">        doSomeThing(node);</span><br><span class="line">        <span class="keyword">if</span>(node.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            queue.offer(node.getLeft());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(node.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            queue.offer(node.getRight());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="从前序和中序构造二叉树"><a href="#从前序和中序构造二叉树" class="headerlink" title="从前序和中序构造二叉树"></a>从前序和中序构造二叉树</h2><p><font color="Coral" size="5">例子</font>：已知一个二叉树的前序为：A-B-D-E-C-F，中序为：D-B-E-A-F-C，</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Node&lt;String&gt; <span class="title">buildTree</span><span class="params">(String preorder, String inorder)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> buildTree(preorder, inorder, preorder.length(), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Node&lt;String&gt; <span class="title">buildTree</span><span class="params">(String preorder, String inorder, <span class="keyword">int</span> count, <span class="keyword">int</span> preStart, <span class="keyword">int</span> inStart)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(count &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;String&gt; root = <span class="keyword">new</span> Node&lt;String&gt;(preorder.substring(preStart, preStart + <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">int</span> index = inStart + count - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(;index &gt;= inStart; index --)&#123;</span><br><span class="line">        <span class="keyword">if</span>(inorder.charAt(index) == preorder.charAt(preStart))&#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> leftCount = index - inStart;</span><br><span class="line">    <span class="keyword">int</span> rightCount = inStart + count - index - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(leftCount &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">int</span> leftInStart = inStart;</span><br><span class="line">        <span class="keyword">int</span> leftPreStart = preStart + <span class="number">1</span>;</span><br><span class="line">        Node&lt;String&gt; left = buildTree(preorder, inorder, leftCount, leftPreStart, leftInStart);</span><br><span class="line">        root.setLeft(left);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(rightCount &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">int</span> rightInStart = index + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> rightPreStart = preStart + leftCount + <span class="number">1</span>;</span><br><span class="line">        Node&lt;String&gt; right = buildTree(preorder, inorder, rightCount, rightPreStart, rightInStart);</span><br><span class="line">        root.setRight(right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#数据结构与算法" >
+    <span class="tag-code">数据结构与算法</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/08/19/test/">
+        <span class="nav-arrow">← </span>
+        
+          test
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#前序遍历"><span class="toc-nav-text">前序遍历</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#递归实现"><span class="toc-nav-text">递归实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#非递归实现"><span class="toc-nav-text">非递归实现</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#中序遍历"><span class="toc-nav-text">中序遍历</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#递归实现-1"><span class="toc-nav-text">递归实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#非递归实现-1"><span class="toc-nav-text">非递归实现</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#后序遍历"><span class="toc-nav-text">后序遍历</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#递归实现-2"><span class="toc-nav-text">递归实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#非递归实现-2"><span class="toc-nav-text">非递归实现</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#层次遍历"><span class="toc-nav-text">层次遍历</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#从前序和中序构造二叉树"><span class="toc-nav-text">从前序和中序构造二叉树</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2019/08/31/traversalTree/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "Jce-Eric";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "二叉树的遍历",
+        owner: "Jce-Eric",
+        repo: "Jce-Eric.github.io",
+        oauth: {
+          client_id: "52af927fe48e6c1d9f7e",
+          client_secret: "a7dc0d1a1a99003ca896eb1eeb7660967499d91e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

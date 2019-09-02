@@ -158,7 +158,7 @@
 <p>由于开机的时候计算机处于实模式下，只能访问1MB地址空间，而地址<font color="Coral"> 0xFFFF0 </font>距离1MB只剩下16个字节了。故真正的BIOS代码不在地址<font color="Coral"> 0xFFFF0 </font>，该处只是一个跳转指令  <code>jmp far f000 : e05b</code>，真正的BIOS代码在地址 <font color="Coral"> 0xFE050 </font>。</p>
 </blockquote>
 <blockquote>
-<p><strong>实模式为什么地址空间只有1MB?</strong><br>&emsp;&emsp;实模式出现于 8088 CPU时代，当时只有20根地址线，故地址空间只有1MB。而现在的计算机虽然不只20跟地址线，但出于向后兼容的需要，所以实模式下仍只有1MB地址空间。</p>
+<p><strong>实模式为什么地址空间只有1MB?</strong><br>&emsp;&emsp;实模式出现于 8088 CPU时代，当时只有20根地址线，故地址空间只有1MB。而现在的计算机虽然不只20根地址线，但出于向后兼容的需要，所以实模式下仍只有1MB地址空间。</p>
 </blockquote>
 <h2 id="BIOS上场"><a href="#BIOS上场" class="headerlink" title="BIOS上场"></a>BIOS上场</h2><p>计算机执行地址<font color="Coral"> 0xFFFF0 </font>处的跳转指令，将控制权交给BIOS，BIOS检查内存，显卡等外设信息，进行初始化硬件等操作。BIOS的最后一项工作就是检查位于启动盘的0盘0道1扇区的内容，如果此扇区的末尾两个字节是魔数<font color="Coral"> 0x55 </font>和<font color="Coral"> 0xaa </font>，则认为此扇区中存在MBR，然后将MBR加载到物理地址为<font color="Coral"> 0x7c00 </font>的内存中去。跳转到<font color="Coral"> 0x7c00 </font>地址继续执行，将控制权交给MBR。</p>
 <blockquote>
@@ -175,12 +175,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
-  </a>
-
   <a href="/tags#计算机原理" >
     <span class="tag-code">计算机原理</span>
+  </a>
+
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
   </a>
 
       </div>
